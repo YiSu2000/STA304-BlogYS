@@ -8,7 +8,9 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 
 [permalinks]
     post = "/:year/:month/:day/:slug/"
-
+[[menu.main]]
+    name = "Posts"
+    url = "/"
 [[menu.main]]
     name = "Yi's GitHub"
     url = "https://github.com/YiSu2000/STA304-BlogYS"
@@ -32,7 +34,7 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
     favicon = "favicon.ico"
 
     [params.logo]
-    url = "logo.png"
+    url = "MyLogo.png"
     width = 50
     height = 50
     alt = "Logo"

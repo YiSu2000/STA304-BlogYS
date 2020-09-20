@@ -2,18 +2,18 @@
 title: "Positive correlation of severity of fire incident on estimated loss and number of responding firefighters"
 author: "Yi Su"
 date: 2020-09-17
-abstract: "This report analyzed the impact of severity of fire incidents on both economic loss and the number of firefighter responded. As well as correlation between loss and number of firefighters just for demonstration of the role of severity of fire between them"
+abstract: "This post analyzed the impact of severity of fire incidents on both economic loss and the number of firefighter responded. As well as correlation between loss and number of firefighters just for demonstration of the role of severity of fire between them"
 output:
   html_document:
     df_print: paged
 ---
 > # Abstract
-> This report analyzed the impact of severity of fire incidents on both economic loss and the number of firefighter responded. As well as correlation between loss and number of firefighters just for demonstration of the role of severity of fire between them
+> This post analyzed the impact of severity of fire incidents on both economic loss and the number of firefighter responded. As well as correlation between loss and number of firefighters just for demonstration of the role of severity of fire between them
 
 # Introduction
   "Fire Incidents Data" is a dataset published by the TFS, Toronto Fire Services containing 17536 observations of fire incidents defined by the Ontario Fire Marshal. For each observation, detailed assessments of the incident are recorded, such as crew arrival time, estimated loss in dollars, existence and type of fire alarm, number of casualties and more. 
   
-  In this report, the distribution of estimated dollar loss caused by fire incidents, number of firefighters that responded to the incident, and the severity of fire incident will be examined. These variables should be in a positive correlation of each other theoratically, but the degree is arguable. The reason being more severe fire incidents required more firefighters in response and causes more loss in general, on the other hand, more firefighters involved should have better controll of the incident there fore result in smaller loss.
+  In this post, the distribution of estimated dollar loss caused by fire incidents, number of firefighters that responded to the incident, and the severity of fire incident will be examined. These variables should be in a positive correlation of each other theoratically, but the degree is arguable. The reason being more severe fire incidents required more firefighters in response and causes more loss in general, on the other hand, more firefighters involved should have better controll of the incident there fore result in smaller loss.
 
 ```{r,echo = FALSE,options(readr.num_columns = 0), message = FALSE}
 library(tidyverse)
