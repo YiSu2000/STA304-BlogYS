@@ -4,6 +4,7 @@ author: "Yi Su"
 date: "2020/9/17"
 output: pdf_document
 ---
+# Fire Incidents in Toronto
 # Introduction
   "Fire Incidents Data" is a dataset published by the TFS, Toronto Fire Services containing 17536 observations of fire incidents defined by the Ontario Fire Marshal. For each observation, detailed assessments of the incident are recorded, such as crew arrival time, estimated loss in dollars, existence and type of fire alarm, number of casualties and more. 
   
