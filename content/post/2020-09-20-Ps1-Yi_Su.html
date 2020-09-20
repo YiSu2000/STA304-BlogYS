@@ -40,15 +40,21 @@ To make the graph more readable, couple outlier incidents that resulted in more 
 #to adjust the axis values by removing the 1 case that have significantly large estimated dollar loss and number of responding personnel. Also, there exist a severity of 99 in the extent of fire column which stands for undetermined, for accuracy, we remove it like a NA row.
 Loss_NumUnit_low%&gt;%
   ggplot(aes(x=Number_of_responding_personnel))+
-  geom_histogram(binwidth = 10)
+  geom_histogram(binwidth = 10)+
+  labs(x = &quot;Number of Responding Personnel&quot;, y = &quot;Count&quot;, title = &quot;Distribution of Number of Responding Personnel&quot;)+
+  theme(title = element_text(size = 15, face = &quot;bold&quot;),axis.title=element_text(size=12))
 #clearly most fire incidents required less than 150 personnel
 Loss_NumUnit_low%&gt;%
   ggplot(aes(x=Estimated_Dollar_Loss))+
-  geom_histogram()
+  geom_histogram()+
+  labs(x = &quot;Estimated Dollar Loss&quot;, y = &quot;Count&quot;, title = &quot;Distribution of Estimated Dollar Loss&quot;)+
+  theme(title = element_text(size = 15, face = &quot;bold&quot;),axis.title=element_text(size=12))
 #most losses are contained within $500,000
 Loss_NumUnit_low%&gt;%
   ggplot(aes(x=Extent_Of_Fire))+
-  geom_histogram(binwidth = 1)
+  geom_histogram(binwidth = 1)+
+  labs(x = &quot;Extent of Fire&quot;, y = &quot;Count&quot;, title = &quot;Distribution of Extent of Fire&quot;)+
+  theme(title = element_text(size = 15, face = &quot;bold&quot;),axis.title=element_text(size=12))
 #most fire incidents are restricted to less than 7-8</code></pre>
 <p><img src="/post/2020-09-20-Ps1-Yi_Su_files/figure-html/unnamed-chunk-1-1.png" width="50%" /><img src="/post/2020-09-20-Ps1-Yi_Su_files/figure-html/unnamed-chunk-1-2.png" width="50%" /><img src="/post/2020-09-20-Ps1-Yi_Su_files/figure-html/unnamed-chunk-1-3.png" width="50%" /></p>
 <p>The individual distribution of each variable are displayed as above. In all three variables, the distribution is heavily centered at the left-most end of the graph.</p>
@@ -63,16 +69,20 @@ Loss_NumUnit_low%&gt;%
   ggplot(aes(x=Extent_Of_Fire, y=Number_of_responding_personnel))+
   geom_point()+
   geom_smooth(method =&quot;lm&quot;)+
+  labs(x = &quot;Extent of Fire&quot;, y = &quot;Number of Responding Personnel&quot;, title = &quot;Extent of Fire Vs. Number of Firefighters&quot;)+
   annotate(&quot;text&quot;, x = 4, y = 200,
-  label = &quot;paste(italic(R), \&quot; = .431\&quot;)&quot;, parse = TRUE)
+  label = &quot;paste(italic(R), \&quot; = .431\&quot;)&quot;, parse = TRUE, size = 8)+
+  theme(title = element_text(size = 15, face = &quot;bold&quot;),axis.title=element_text(size=12))
 cor(Loss_NumUnit_low$Extent_Of_Fire,Loss_NumUnit_low$Number_of_responding_personnel)</code></pre>
 <pre><code>## [1] 0.4311056</code></pre>
 <pre class="r"><code>Loss_NumUnit_low%&gt;%
   ggplot(aes(x=Extent_Of_Fire, y=Estimated_Dollar_Loss))+
   geom_point()+
   geom_smooth(method =&quot;lm&quot;)+
+  labs(x = &quot;Extent of Fire&quot;, y = &quot;Estimated Dollar Loss&quot;, title = &quot;Extent of Fire Vs. Dollar Loss&quot;)+
   annotate(&quot;text&quot;, x = 4, y = 1500000,
-  label = &quot;paste(italic(R), \&quot; = .312\&quot;)&quot;, parse = TRUE)
+  label = &quot;paste(italic(R), \&quot; = .312\&quot;)&quot;, parse = TRUE,size = 8)+
+  theme(title = element_text(size = 15, face = &quot;bold&quot;),axis.title=element_text(size=12))
 cor(Loss_NumUnit_low$Extent_Of_Fire,Loss_NumUnit_low$Estimated_Dollar_Loss)</code></pre>
 <pre><code>## [1] 0.3120458</code></pre>
 <p><img src="/post/2020-09-20-Ps1-Yi_Su_files/figure-html/unnamed-chunk-2-1.png" width="50%" /><img src="/post/2020-09-20-Ps1-Yi_Su_files/figure-html/unnamed-chunk-2-2.png" width="50%" /></p>
@@ -81,8 +91,10 @@ cor(Loss_NumUnit_low$Extent_Of_Fire,Loss_NumUnit_low$Estimated_Dollar_Loss)</cod
   ggplot(aes(x=Estimated_Dollar_Loss, y=Number_of_responding_personnel))+
   geom_point()+
   geom_smooth(method =&quot;lm&quot;)+
+  labs(x = &quot;Estimated Dollar Loss&quot;, y = &quot;Number of Responding Personnel&quot;, title = &quot;Dollar Loss Vs. Number of Firefighters&quot;)+
   annotate(&quot;text&quot;, x = 3000000, y = 400,
-  label = &quot;paste(italic(R), \&quot; = .549\&quot;)&quot;, parse = TRUE)
+  label = &quot;paste(italic(R), \&quot; = .549\&quot;)&quot;, parse = TRUE,size = 8)+
+  theme(title = element_text(size = 15, face = &quot;bold&quot;),axis.title=element_text(size=12))
 cor(Loss_NumUnit_low$Estimated_Dollar_Loss,Loss_NumUnit_low$Number_of_responding_personnel)</code></pre>
 <pre><code>## [1] 0.5493347</code></pre>
 <p><img src="/post/2020-09-20-Ps1-Yi_Su_files/figure-html/unnamed-chunk-3-1.png" width="80%" /></p>

@@ -39,15 +39,21 @@ Loss_NumUnit_low <- Loss_NumUnit%>%
 #to adjust the axis values by removing the 1 case that have significantly large estimated dollar loss and number of responding personnel. Also, there exist a severity of 99 in the extent of fire column which stands for undetermined, for accuracy, we remove it like a NA row.
 Loss_NumUnit_low%>%
   ggplot(aes(x=Number_of_responding_personnel))+
-  geom_histogram(binwidth = 10)
+  geom_histogram(binwidth = 10)+
+  labs(x = "Number of Responding Personnel", y = "Count", title = "Distribution of Number of Responding Personnel")+
+  theme(title = element_text(size = 15, face = "bold"),axis.title=element_text(size=12))
 #clearly most fire incidents required less than 150 personnel
 Loss_NumUnit_low%>%
   ggplot(aes(x=Estimated_Dollar_Loss))+
-  geom_histogram()
+  geom_histogram()+
+  labs(x = "Estimated Dollar Loss", y = "Count", title = "Distribution of Estimated Dollar Loss")+
+  theme(title = element_text(size = 15, face = "bold"),axis.title=element_text(size=12))
 #most losses are contained within $500,000
 Loss_NumUnit_low%>%
   ggplot(aes(x=Extent_Of_Fire))+
-  geom_histogram(binwidth = 1)
+  geom_histogram(binwidth = 1)+
+  labs(x = "Extent of Fire", y = "Count", title = "Distribution of Extent of Fire")+
+  theme(title = element_text(size = 15, face = "bold"),axis.title=element_text(size=12))
 #most fire incidents are restricted to less than 7-8
 ```
 
@@ -68,15 +74,19 @@ Loss_NumUnit_low%>%
   ggplot(aes(x=Extent_Of_Fire, y=Number_of_responding_personnel))+
   geom_point()+
   geom_smooth(method ="lm")+
+  labs(x = "Extent of Fire", y = "Number of Responding Personnel", title = "Extent of Fire Vs. Number of Firefighters")+
   annotate("text", x = 4, y = 200,
-  label = "paste(italic(R), \" = .431\")", parse = TRUE)
+  label = "paste(italic(R), \" = .431\")", parse = TRUE, size = 8)+
+  theme(title = element_text(size = 15, face = "bold"),axis.title=element_text(size=12))
 cor(Loss_NumUnit_low$Extent_Of_Fire,Loss_NumUnit_low$Number_of_responding_personnel)
 Loss_NumUnit_low%>%
   ggplot(aes(x=Extent_Of_Fire, y=Estimated_Dollar_Loss))+
   geom_point()+
   geom_smooth(method ="lm")+
+  labs(x = "Extent of Fire", y = "Estimated Dollar Loss", title = "Extent of Fire Vs. Dollar Loss")+
   annotate("text", x = 4, y = 1500000,
-  label = "paste(italic(R), \" = .312\")", parse = TRUE)
+  label = "paste(italic(R), \" = .312\")", parse = TRUE,size = 8)+
+  theme(title = element_text(size = 15, face = "bold"),axis.title=element_text(size=12))
 cor(Loss_NumUnit_low$Extent_Of_Fire,Loss_NumUnit_low$Estimated_Dollar_Loss)
 
 ```
@@ -88,8 +98,10 @@ Loss_NumUnit_low%>%
   ggplot(aes(x=Estimated_Dollar_Loss, y=Number_of_responding_personnel))+
   geom_point()+
   geom_smooth(method ="lm")+
+  labs(x = "Estimated Dollar Loss", y = "Number of Responding Personnel", title = "Dollar Loss Vs. Number of Firefighters")+
   annotate("text", x = 3000000, y = 400,
-  label = "paste(italic(R), \" = .549\")", parse = TRUE)
+  label = "paste(italic(R), \" = .549\")", parse = TRUE,size = 8)+
+  theme(title = element_text(size = 15, face = "bold"),axis.title=element_text(size=12))
 cor(Loss_NumUnit_low$Estimated_Dollar_Loss,Loss_NumUnit_low$Number_of_responding_personnel)
 ```
 
