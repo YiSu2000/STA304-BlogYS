@@ -1,0 +1,90 @@
+---
+title: "STA304-A1-Yi_Su"
+author: "Yi Su"
+date: "2020/9/17"
+output: pdf_document
+---
+# Introduction
+  "Fire Incidents Data" is a dataset published by the TFS, Toronto Fire Services containing 17536 observations of fire incidents defined by the Ontario Fire Marshal. For each observation, detailed assessments of the incident are recorded, such as crew arrival time, estimated loss in dollars, existence and type of fire alarm, number of casualties and more. 
+  
+  In this report, I will examine the distribution of estimated dollar loss caused by fire incidents, number of firefighters that responded to the incident, and the severity of fire incident. These variables should be in a positive correlation of each other theoratically, but the degree is arguable. The reason being more severe fire incidents required more firefighters in response and causes more loss in general, on the other hand, more firefighters involved should have better controll of the incident there fore result in smaller loss.
+
+```{r}
+library(tidyverse)
+library(visdat)
+RAW <- read_csv("Fire Incidents Data.csv")%>%select(Estimated_Dollar_Loss, Number_of_responding_personnel, Extent_Of_Fire )
+#to build a data fram with only the varaiables we are interested in
+Loss_NumUnit <- na.omit(RAW)
+#to remove all the rows with NAs
+Loss_NumUnit$Extent_Of_Fire <- as.numeric(sapply(strsplit(Loss_NumUnit$Extent_Of_Fire, " "), "[[", 1))
+#since the TFS added a description fo fire severity at the end of it's numeric level, we only capture the numeric level by spliting the first character of the string which is the number
+```
+#Working on the Dataset
+  To work with the Fire_Incidents dataset, we need to pull out the data we are interested in and make it tidy for graphing and regression. This could be done by simply selecting the variables we are interested in and removing all the empty observations (the NAs) of those variables. The three variable we are intereted in are named "Estimated_Dollar_Loss", "Number_of_responding_personnel", and "Extent_Of_Fire" (severity) in the dataset.
+  
+  In this case, 6322 incidents were removed for having no value recorded, and those NAs are mostly from "Extent_of_Fire" variable. Another interesting feature of this dataset is that the "Extent_of_Fire" variable included a description of the level of severity in each incident. Severity is ranked from 1 to 10, 1 being the fire is confined to the object of origin, 10 being the fire spreaded beyond the building of origin. This is useful when interpreting the data, but not so tidy and convenient when graphing it. Therefore, we deleted all the description by taking advantage of the fact that all entry begin with the numeric level of severity. 
+  
+  To make the graph more readable, couple outlier incidents that resulted in more than 6 million dollar estimated loss and required more than 1000 were removed. This should make the graphs to a significantly smaller scale, and more readable. In addition, there exist a special value of 99 in "extent_of_fire". The 99 stands for severity undetermined, which only appeared 91 among the entire dataset. This special case is also considered as a NA value and therefore filtered out of our data.
+```{r}
+Loss_NumUnit_low <- Loss_NumUnit%>%
+  filter(Estimated_Dollar_Loss < 6000000)%>%
+  filter(Number_of_responding_personnel < 1000)%>%
+  filter(Extent_Of_Fire < 90)
+#to adjust the axis values by removing the 1 case that have significantly large estimated dollar loss and number of responding personnel. Also, there exist a severity of 99 in the extent of fire column which stands for undetermined, for accuracy, we remove it like a NA row.
+Loss_NumUnit_low%>%
+  ggplot(aes(x=Number_of_responding_personnel))+
+  geom_histogram(binwidth = 10)
+#clearly most fire incidents required less than 150 personnel
+Loss_NumUnit_low%>%
+  ggplot(aes(x=Estimated_Dollar_Loss))+
+  geom_histogram()
+#most losses are contained within $500,000
+Loss_NumUnit_low%>%
+  ggplot(aes(x=Extent_Of_Fire))+
+  geom_histogram(binwidth = 1)
+#most fire incidents are restricted to less than 7-8
+```
+#Individual Distribution
+  The individual distribution of each variable are displayed as above. In all three variables, the distribution is heavily centered at the left-most end of the graph. 
+  
+  Notice that the number of 4 responding personnels appeared a lot, this is because TFS assigns 4 firefighter and 1 fire truck as a unit in most cases.
+  
+  Estimated loss in dollar are mostly under $500,000.
+  
+  From distribution of "extent of fire", we see most incidents have a severity of less than 4, which means spread beyond room of origin but still at the same floor.
+  
+  Overall, it is obivious that most fire incidents are controlled to a low severity and loss, as well as number of firefighters needed in response.
+  
+```{r}
+Loss_NumUnit_low%>%
+  ggplot(aes(x=Estimated_Dollar_Loss, y=Number_of_responding_personnel))+
+  geom_point()+
+  geom_smooth(method ="lm")+
+  annotate("text", x = 3000000, y = 400,
+  label = "paste(italic(R), \" = .549\")", parse = TRUE)
+cor(Loss_NumUnit_low$Estimated_Dollar_Loss,Loss_NumUnit_low$Number_of_responding_personnel)
+Loss_NumUnit_low%>%
+  ggplot(aes(x=Extent_Of_Fire, y=Number_of_responding_personnel))+
+  geom_point()+
+  geom_smooth(method ="lm")+
+  annotate("text", x = 4, y = 200,
+  label = "paste(italic(R), \" = .431\")", parse = TRUE)
+cor(Loss_NumUnit_low$Extent_Of_Fire,Loss_NumUnit_low$Number_of_responding_personnel)
+Loss_NumUnit_low%>%
+  ggplot(aes(x=Extent_Of_Fire, y=Estimated_Dollar_Loss))+
+  geom_point()+
+  geom_smooth(method ="lm")+
+  annotate("text", x = 4, y = 1500000,
+  label = "paste(italic(R), \" = .312\")", parse = TRUE)
+cor(Loss_NumUnit_low$Extent_Of_Fire,Loss_NumUnit_low$Estimated_Dollar_Loss)
+
+```
+#Are they Correlated?
+
+  First, "Extent_of_fire" appears to have a positive relationship with "Number_of_responding_personnel" and "Estimated_Dollar_Loss". The blue line in the graph is a simple linear regression line showing a positive correlation between the two variables for all three graphs, and the R value (correlation coefficient) indicates the strength of relationship. Notice that the correlation coefficitn of 0.431 and 0.312 are considered as fairly weak, this is due to the fact that, there are always more elements other than severity of the incident which influences number of responding firefighters and estimated loss. For example, the number of firefighters in a certain responding area is limited in the given time, and maybe the incident happened in an area or building with less valuable item in dollars.
+  
+  Looking at the impact of "number_of_Responding_Personnel" on "Estimated_Dollar_Loss". It is obvious that most incidents are clustered at the left-bottom corner, which follows our observation on the individual distribution of there two. A R value of 0. 549 appears that the correlation between number of firefighters involved and estimated dollar loss is stronger than the previous two. However, this does not mean there exist a causality of "more firefighters result in more loss" or the opposite, the more important rule is the severity of incident. "Extent_of_Fire" acts like a gear between them, linking higher estimated loss with more firefighter involved in average.
+  
+  These graphs show extent of fire is indeed a mesurement of the TFS on how many personnel they should send and an implication of the potential loss in dollars. As mentioned above, there are many other potential factors that could influence loss in dollars and the number of responding personnels.
+
+
