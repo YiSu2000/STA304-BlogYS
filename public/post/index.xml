@@ -17,8 +17,8 @@
       <pubDate>Thu, 17 Sep 2020 00:00:00 +0000</pubDate>
       
       <guid>/2020/09/17/positive-correlation-of-severity-of-fire-incident-on-estimated-loss-and-number-of-responding-firefighters/</guid>
-      <description>Introduction &amp;quot;Fire Incidents Data&amp;quot; is a dataset published by the TFS, Toronto Fire Services containing 17536 observations of fire incidents defined by the Ontario Fire Marshal. For each observation, detailed assessments of the incident are recorded, such as crew arrival time, estimated loss in dollars, existence and type of fire alarm, number of casualties and more.
-In this report, the distribution of estimated dollar loss caused by fire incidents, number of firefighters that responded to the incident, and the severity of fire incident will be examined.</description>
+      <description>Abstract This report analyzed the impact of severity of fire incidents on both economic loss and the number of firefighter responded. As well as correlation between loss and number of firefighters just for demonstration of the role of severity of fire between them
+ Introduction &amp;quot;Fire Incidents Data&amp;quot; is a dataset published by the TFS, Toronto Fire Services containing 17536 observations of fire incidents defined by the Ontario Fire Marshal.</description>
     </item>
     
     <item>
