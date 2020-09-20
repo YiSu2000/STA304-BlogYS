@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Hugo 0.74.3" />
+
+
+<title>STA304-A1-Yi_Su - Yi&#39;s Web</title>
+<meta property="og:title" content="STA304-A1-Yi_Su - Yi&#39;s Web">
+
+
+  <link href='/favicon.ico' rel='icon' type='image/x-icon'/>
+
+
+
+  
+
+
+
+
+
+
+
+
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
+<link rel="stylesheet" href="/css/fonts.css" media="all">
+<link rel="stylesheet" href="/css/main.css" media="all">
+
+
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="/images/logo.png"
+         width="50"
+         height="50"
+         alt="Logo">
+  </a>
+
+  <ul class="nav-links">
+    
+    <li><a href="/about/">About</a></li>
+    
+    <li><a href="https://github.com/rstudio/blogdown">GitHub</a></li>
+    
+    <li><a href="https://www.utoronto.ca">UofT</a></li>
+    
+  </ul>
+</nav>
+
+      </header>
+
+
+<main class="content" role="main">
+
+  <article class="article">
+    
+    <span class="article-duration">6 min read</span>
+    
+
+    <h1 class="article-title">STA304-A1-Yi_Su</h1>
+
+    
+    <span class="article-date">0001-01-01</span>
+    
+
+    <div class="article-content">
+      
+
+
+<div id="fire-incidents-in-toronto" class="section level1">
+<h1>Fire Incidents in Toronto</h1>
+</div>
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>&quot;Fire Incidents Data&quot; is a dataset published by the TFS, Toronto Fire Services containing 17536 observations of fire incidents defined by the Ontario Fire Marshal. For each observation, detailed assessments of the incident are recorded, such as crew arrival time, estimated loss in dollars, existence and type of fire alarm, number of casualties and more.</p>
+<p>In this report, I will examine the distribution of estimated dollar loss caused by fire incidents, number of firefighters that responded to the incident, and the severity of fire incident. These variables should be in a positive correlation of each other theoratically, but the degree is arguable. The reason being more severe fire incidents required more firefighters in response and causes more loss in general, on the other hand, more firefighters involved should have better controll of the incident there fore result in smaller loss.</p>
+<pre><code>## ── Attaching packages ──────────────────────────────────── tidyverse 1.3.0 ──</code></pre>
+<pre><code>## ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
+## ✓ tibble  3.0.3     ✓ dplyr   1.0.2
+## ✓ tidyr   1.1.2     ✓ stringr 1.4.0
+## ✓ readr   1.3.1     ✓ forcats 0.5.0</code></pre>
+<pre><code>## ── Conflicts ─────────────────────────────────────── tidyverse_conflicts() ──
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   `_id` = col_double(),
+##   Civilian_Casualties = col_double(),
+##   Count_of_Persons_Rescued = col_double(),
+##   Estimated_Dollar_Loss = col_double(),
+##   Estimated_Number_Of_Persons_Displaced = col_double(),
+##   Exposures = col_double(),
+##   Ext_agent_app_or_defer_time = col_datetime(format = &quot;&quot;),
+##   Fire_Under_Control_Time = col_datetime(format = &quot;&quot;),
+##   Incident_Station_Area = col_double(),
+##   Incident_Ward = col_double(),
+##   Last_TFS_Unit_Clear_Time = col_datetime(format = &quot;&quot;),
+##   Latitude = col_double(),
+##   Longitude = col_double(),
+##   Number_of_responding_apparatus = col_double(),
+##   Number_of_responding_personnel = col_double(),
+##   TFS_Alarm_Time = col_datetime(format = &quot;&quot;),
+##   TFS_Arrival_Time = col_datetime(format = &quot;&quot;),
+##   TFS_Firefighter_Casualties = col_double()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+</div>
+<div id="working-on-the-dataset" class="section level1">
+<h1>Working on the Dataset</h1>
+<div style="white-space: pre-line;">To work with the Fire_Incidents dataset, we need to pull out the data we are interested in and make it tidy for graphing and regression. This could be done by simply selecting the variables we are interested in and removing all the empty observations (the NAs) of those variables. The three variable we are intereted in are named &quot;Estimated_Dollar_Loss&quot;, &quot;Number_of_responding_personnel&quot;, and &quot;Extent_Of_Fire&quot; (severity) in the dataset.
+In this case, 6322 incidents were removed for having no value recorded, and those NAs are mostly from &quot;Extent_of_Fire&quot; variable. Another interesting feature of this dataset is that the &quot;Extent_of_Fire&quot; variable included a description of the level of severity in each incident. Severity is ranked from 1 to 10, 1 being the fire is confined to the object of origin, 10 being the fire spreaded beyond the building of origin. This is useful when interpreting the data, but not so tidy and convenient when graphing it. Therefore, we deleted all the description by taking advantage of the fact that all entry begin with the numeric level of severity.
+To make the graph more readable, couple outlier incidents that resulted in more than 6 million dollar estimated loss and required more than 1000 were removed. This should make the graphs to a significantly smaller scale, and more readable. In addition, there exist a special value of 99 in &quot;extent_of_fire&quot;. The 99 stands for severity undetermined, which only appeared 91 among the entire dataset. This special case is also considered as a NA value and therefore filtered out of our data.</div>
+<pre class="r"><code>Loss_NumUnit_low &lt;- Loss_NumUnit%&gt;%
+  filter(Estimated_Dollar_Loss &lt; 6000000)%&gt;%
+  filter(Number_of_responding_personnel &lt; 1000)%&gt;%
+  filter(Extent_Of_Fire &lt; 90)
+#to adjust the axis values by removing the 1 case that have significantly large estimated dollar loss and number of responding personnel. Also, there exist a severity of 99 in the extent of fire column which stands for undetermined, for accuracy, we remove it like a NA row.
+Loss_NumUnit_low%&gt;%
+  ggplot(aes(x=Number_of_responding_personnel))+
+  geom_histogram(binwidth = 10)</code></pre>
+<p><img src="/post/2020-09-20-Ps1-Yi_Su_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<pre class="r"><code>#clearly most fire incidents required less than 150 personnel
+Loss_NumUnit_low%&gt;%
+  ggplot(aes(x=Estimated_Dollar_Loss))+
+  geom_histogram()</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="/post/2020-09-20-Ps1-Yi_Su_files/figure-html/unnamed-chunk-1-2.png" width="672" /></p>
+<pre class="r"><code>#most losses are contained within $500,000
+Loss_NumUnit_low%&gt;%
+  ggplot(aes(x=Extent_Of_Fire))+
+  geom_histogram(binwidth = 1)</code></pre>
+<p><img src="/post/2020-09-20-Ps1-Yi_Su_files/figure-html/unnamed-chunk-1-3.png" width="672" /></p>
+<pre class="r"><code>#most fire incidents are restricted to less than 7-8</code></pre>
+</div>
+<div id="individual-distribution" class="section level1">
+<h1>Individual Distribution</h1>
+<div style="white-space: pre-line;">The individual distribution of each variable are displayed as above. In all three variables, the distribution is heavily centered at the left-most end of the graph.
+Notice that the number of 4 responding personnels appeared a lot, this is because TFS assigns 4 firefighter and 1 fire truck as a unit in most cases.
+Estimated loss in dollar are mostly under $500,000.
+From distribution of &quot;extent of fire&quot;, we see most incidents have a severity of less than 4, which means spread beyond room of origin but still at the same floor.
+Overall, it is obivious that most fire incidents are controlled to a low severity and loss, as well as number of firefighters needed in response.</div>
+<pre class="r"><code>Loss_NumUnit_low%&gt;%
+  ggplot(aes(x=Estimated_Dollar_Loss, y=Number_of_responding_personnel))+
+  geom_point()+
+  geom_smooth(method =&quot;lm&quot;)+
+  annotate(&quot;text&quot;, x = 3000000, y = 400,
+  label = &quot;paste(italic(R), \&quot; = .549\&quot;)&quot;, parse = TRUE)</code></pre>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="/post/2020-09-20-Ps1-Yi_Su_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<pre class="r"><code>cor(Loss_NumUnit_low$Estimated_Dollar_Loss,Loss_NumUnit_low$Number_of_responding_personnel)</code></pre>
+<pre><code>## [1] 0.5493347</code></pre>
+<pre class="r"><code>Loss_NumUnit_low%&gt;%
+  ggplot(aes(x=Extent_Of_Fire, y=Number_of_responding_personnel))+
+  geom_point()+
+  geom_smooth(method =&quot;lm&quot;)+
+  annotate(&quot;text&quot;, x = 4, y = 200,
+  label = &quot;paste(italic(R), \&quot; = .431\&quot;)&quot;, parse = TRUE)</code></pre>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="/post/2020-09-20-Ps1-Yi_Su_files/figure-html/unnamed-chunk-2-2.png" width="672" /></p>
+<pre class="r"><code>cor(Loss_NumUnit_low$Extent_Of_Fire,Loss_NumUnit_low$Number_of_responding_personnel)</code></pre>
+<pre><code>## [1] 0.4311056</code></pre>
+<pre class="r"><code>Loss_NumUnit_low%&gt;%
+  ggplot(aes(x=Extent_Of_Fire, y=Estimated_Dollar_Loss))+
+  geom_point()+
+  geom_smooth(method =&quot;lm&quot;)+
+  annotate(&quot;text&quot;, x = 4, y = 1500000,
+  label = &quot;paste(italic(R), \&quot; = .312\&quot;)&quot;, parse = TRUE)</code></pre>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="/post/2020-09-20-Ps1-Yi_Su_files/figure-html/unnamed-chunk-2-3.png" width="672" /></p>
+<pre class="r"><code>cor(Loss_NumUnit_low$Extent_Of_Fire,Loss_NumUnit_low$Estimated_Dollar_Loss)</code></pre>
+<pre><code>## [1] 0.3120458</code></pre>
+</div>
+<div id="are-they-correlated" class="section level1">
+<h1>Are they Correlated?</h1>
+<div style="white-space: pre-line;">First, &quot;Extent_of_fire&quot; appears to have a positive relationship with &quot;Number_of_responding_personnel&quot; and &quot;Estimated_Dollar_Loss&quot;. The blue line in the graph is a simple linear regression line showing a positive correlation between the two variables for all three graphs, and the R value (correlation coefficient) indicates the strength of relationship. Notice that the correlation coefficitn of 0.431 and 0.312 are considered as fairly weak, this is due to the fact that, there are always more elements other than severity of the incident which influences number of responding firefighters and estimated loss. For example, the number of firefighters in a certain responding area is limited in the given time, and maybe the incident happened in an area or building with less valuable item in dollars.
+Looking at the impact of &quot;number_of_Responding_Personnel&quot; on &quot;Estimated_Dollar_Loss&quot;. It is obvious that most incidents are clustered at the left-bottom corner, which follows our observation on the individual distribution of there two. A R value of 0. 549 appears that the correlation between number of firefighters involved and estimated dollar loss is stronger than the previous two. However, this does not mean there exist a causality of &quot;more firefighters result in more loss&quot; or the opposite, the more important rule is the severity of incident. &quot;Extent_of_Fire&quot; acts like a gear between them, linking higher estimated loss with more firefighter involved in average.
+These graphs show extent of fire is indeed a mesurement of the TFS on how many personnel they should send and an implication of the potential loss in dollars. As mentioned above, there are many other potential factors that could influence loss in dollars and the number of responding personnels.</div>
+</div>
+
+    </div>
+  </article>
+
+  
+
+
+</main>
+
+      <footer class="footer">
+        <ul class="footer-links">
+          <li>
+            <a href="/index.xml" type="application/rss+xml" target="_blank">RSS feed</a>
+          </li>
+          <li>
+            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="/images/hugo-logo.png" alt="Img link to Hugo website" width="22" height="22"></a>
+          </li>
+        </ul>
+      </footer>
+
+    </div>
+    
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
+
+    
+<script src="/js/math-code.js"></script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+    
+  </body>
+</html>
+
