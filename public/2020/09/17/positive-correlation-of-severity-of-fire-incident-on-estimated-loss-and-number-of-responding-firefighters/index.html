@@ -46,11 +46,9 @@
 
   <ul class="nav-links">
     
-    <li><a href="/about/">About</a></li>
-    
-    <li><a href="https://github.com/rstudio/blogdown">GitHub</a></li>
-    
     <li><a href="https://www.utoronto.ca">UofT</a></li>
+    
+    <li><a href="https://github.com/YiSu2000/STA304-BlogYS">Yi&#39;s GitHub</a></li>
     
   </ul>
 </nav>
@@ -86,7 +84,7 @@
 </div>
 <div id="working-on-the-dataset" class="section level1">
 <h1>Working on the Dataset</h1>
-<div style="white-space: pre-line;">To work with the Fire_Incidents dataset, we need to pull out the data we are interested in and make it tidy for graphing and regression. This could be done by simply selecting the variables we are interested in and removing all the empty observations (the NAs) of those variables. The three variable we are intereted in are named &quot;Estimated_Dollar_Loss&quot;, &quot;Number_of_responding_personnel&quot;, and &quot;Extent_Of_Fire&quot; (severity) in the dataset, and this new dataset of three variables act as the observational data. In order to do this, the R package &quot;tidyverse&quot; was used.</div>
+<div style="white-space: pre-line;">To work with the Fire_Incidents dataset, we need to pull out the data we are interested in and make it tidy for graphing and regression. This could be done by simply selecting the variables we are interested in and removing all the empty observations (the NAs) of those variables. The three discrete variable we are intereted in are named &quot;Estimated_Dollar_Loss&quot;, &quot;Number_of_responding_personnel&quot;, and &quot;Extent_Of_Fire&quot; (severity) in the dataset, and this new dataset of three variables act as the observational data. In order to do this, the R package &quot;tidyverse&quot; was used.</div>
 <div style="white-space: pre-line;">During the tidying, 6322 incidents were removed for having no value recorded, and those NAs are mostly from &quot;Extent_of_Fire&quot; variable. Another interesting feature of this dataset is that the &quot;Extent_of_Fire&quot; variable included a description of the level of severity in each incident. Severity is a bit different from the others as it is ranked from 1 to 10, 1 being the fire is confined to the object of origin, 10 being the fire spreaded beyond the building of origin. This is useful when interpreting the data, but not so tidy and convenient when graphing it. Therefore, we deleted all the description by taking advantage of the fact that all entry begin with the numeric level of severity.</div>
 <div style="white-space: pre-line;">To make the graph more readable, a couple outlier incidents that resulted in more than 6 million dollar estimated loss and required more than 1000 were removed. This should make the graphs to a significantly smaller scale, and therefore more readable. In addition, there exist a special value of 99 in &quot;extent_of_fire&quot;. The 99 stands for severity undetermined, which only appeared 91 among the entire dataset. This special case is also considered as a NA value and therefore filtered out of our data.</div>
 </div>
