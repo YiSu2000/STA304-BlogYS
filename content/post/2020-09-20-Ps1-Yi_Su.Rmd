@@ -31,7 +31,7 @@ Loss_NumUnit$Extent_Of_Fire <- as.numeric(sapply(strsplit(Loss_NumUnit$Extent_Of
 
 #Individual Distribution
 
-```{r, message = FALSE,fig.show="hold", out.width="50%"}
+```{r, echo= FALSE,message = FALSE,fig.show="hold", out.width="50%"}
 Loss_NumUnit_low <- Loss_NumUnit%>%
   filter(Estimated_Dollar_Loss < 6000000)%>%
   filter(Number_of_responding_personnel < 1000)%>%
@@ -69,7 +69,7 @@ Overall, it is obivious that most fire incidents are controlled to a low severit
   
 #Are they Correlated?
 
-```{r,message = FALSE,fig.show="hold",out.width="50%"}
+```{r,echo = FALSE, message = FALSE,fig.show="hold",out.width="50%"}
 Loss_NumUnit_low%>%
   ggplot(aes(x=Extent_Of_Fire, y=Number_of_responding_personnel))+
   geom_point()+
