@@ -1,5 +1,5 @@
 ---
-title: "Positive correlation of severity of fire incident on estimated loss and number of responding firefighters"
+title: "Positive correlation between severity of fire incident, estimated loss and number of responding firefighters"
 author: "Yi Su"
 date: 2020-09-17
 abstract: "This post analyzed the impact of severity of fire incidents on both economic loss and the number of firefighter responded. As well as correlation between loss and number of firefighters just for demonstration of the role of severity of fire between them"
