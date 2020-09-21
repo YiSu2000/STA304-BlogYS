@@ -79,6 +79,9 @@ From distribution of "extent of fire", we see most incidents have a severity of 
   
 #Are they Correlated?
 
+To assess correlation, the use of simple linear regression model and hypothesis testing on correlation coefficients was done for each set of graphs. The regression model shows a direct graphical implication of the relationship and provides the correlation coefficient. The hypothesis testing is just an extra safe to show that correlation is not zero, so we used a null hypothesis of correlation coefficient equal to zero and the alternative being non-zero.
+
+
 ```{r,echo = FALSE, message = FALSE,fig.show="hold",out.width="50%"}
 Loss_NumUnit_low%>%
   ggplot(aes(x=Extent_Of_Fire, y=Number_of_responding_personnel))+
@@ -87,8 +90,11 @@ Loss_NumUnit_low%>%
   labs(x = "Extent of Fire", y = "Number of Responding Personnel", title = "Fig.4, Extent of Fire Vs. Number of Firefighters")+
   annotate("text", x = 4, y = 200,
   label = "paste(italic(R), \" = .431\")", parse = TRUE, size = 8)+
+  annotate("text", x = 4, y = 300,
+  label = "paste(italic(P-value), \" < 2.2e-16\")", parse = TRUE,size = 8)+
   theme(title = element_text(size = 15, face = "bold"),axis.title=element_text(size=12))
-cor(Loss_NumUnit_low$Extent_Of_Fire,Loss_NumUnit_low$Number_of_responding_personnel)
+cor.test(Loss_NumUnit_low$Extent_Of_Fire,Loss_NumUnit_low$Number_of_responding_personnel)
+
 Loss_NumUnit_low%>%
   ggplot(aes(x=Extent_Of_Fire, y=Estimated_Dollar_Loss))+
   geom_point()+
@@ -96,12 +102,14 @@ Loss_NumUnit_low%>%
   labs(x = "Extent of Fire", y = "Estimated Dollar Loss", title = "Fig.5, Extent of Fire Vs. Dollar Loss")+
   annotate("text", x = 4, y = 1500000,
   label = "paste(italic(R), \" = .312\")", parse = TRUE,size = 8)+
+  annotate("text", x = 4, y = 2500000,
+  label = "paste(italic(P-value), \" < 2.2e-16\")", parse = TRUE,size = 8)+
   theme(title = element_text(size = 15, face = "bold"),axis.title=element_text(size=12))
-cor(Loss_NumUnit_low$Extent_Of_Fire,Loss_NumUnit_low$Estimated_Dollar_Loss)
+cor.test(Loss_NumUnit_low$Extent_Of_Fire,Loss_NumUnit_low$Estimated_Dollar_Loss)
 
 ```
 
-First, "Extent_of_fire" appears to have a positive relationship with both "Number_of_responding_personnel" and "Estimated_Dollar_Loss". The blue line in the graph is a simple linear regression line showing a positive correlation between the two variables for all three graphs, and the R value (correlation coefficient) indicates the strength of relationship. Notice that the correlation coefficitn of 0.431 and 0.312 are considered as fairly weak, this is due to the fact that, there are always more elements other than severity of the incident which influences number of responding firefighters and estimated loss. For example, the number of firefighters in a certain responding area is limited in the given time, and maybe the incident happened in an area or building with less valuable item in dollars.
+First, "Extent_of_fire" appears to have a positive relationship with both "Number_of_responding_personnel" and "Estimated_Dollar_Loss". The blue line in the graph is a simple linear regression line showing a positive correlation between the two variables for all three graphs, and the p-values both being so small is just an indication that we can be sure there exist some correlation between the variables.The R value (correlation coefficient) indicates the strength of relationship. Notice that the correlation coefficitn of 0.431 and 0.312 are considered as fairly weak, this is due to the fact that, there are always more elements other than severity of the incident which influences number of responding firefighters and estimated loss. For example, the number of firefighters in a certain responding area is limited in the given time, and maybe the incident happened in an area or building with less valuable item in dollars.
 
 ```{r,echo = FALSE, message = FALSE,fig.show="hold",out.width="80%"}
 Loss_NumUnit_low%>%
@@ -111,12 +119,14 @@ Loss_NumUnit_low%>%
   labs(x = "Estimated Dollar Loss", y = "Number of Responding Personnel", title = "Fig.6, Dollar Loss Vs. Number of Firefighters")+
   annotate("text", x = 3000000, y = 400,
   label = "paste(italic(R), \" = .549\")", parse = TRUE,size = 8)+
+  annotate("text", x = 3000000, y = 500,
+  label = "paste(italic(P-value), \" < 2.2e-16\")", parse = TRUE,size = 8)+
   theme(title = element_text(size = 15, face = "bold"),axis.title=element_text(size=12))
-cor(Loss_NumUnit_low$Estimated_Dollar_Loss,Loss_NumUnit_low$Number_of_responding_personnel)
+cor.test(Loss_NumUnit_low$Estimated_Dollar_Loss,Loss_NumUnit_low$Number_of_responding_personnel)
 ```
 
 
-Next, Looking at the impact of "Number_of_Responding_Personnel" on "Estimated_Dollar_Loss". The figure above shows that most incidents are clustered at the left-bottom corner, which follows our observation on the individual distribution of there two. A R value of 0. 549 appears that the correlation between number of firefighters involved and estimated dollar loss is stronger than the previous two. However, this does not mean there exist a causality of "more firefighters result in more loss" or the opposite, the more important rule is the severity of incident. "Extent_of_Fire" acts like a gear between them, linking higher estimated loss with more firefighter involved in average.
+Next, Looking at the impact of "Number_of_Responding_Personnel" on "Estimated_Dollar_Loss". The figure above shows that most incidents are clustered at the left-bottom corner, which follows our observation on the individual distribution of there two. Again, the small p-value shows the existence of some kind of correlation. A R value of 0. 549 appears that the correlation between number of firefighters involved and estimated dollar loss is stronger than the previous two. However, this does not mean there exist a causality of "more firefighters result in more loss" or the opposite, the more important rule is the severity of incident. "Extent_of_Fire" acts like a gear between them, linking higher estimated loss with more firefighter involved in average.
   
 #Constraints of the data
 

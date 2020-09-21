@@ -62,7 +62,7 @@
 
   <article class="article">
     
-    <span class="article-duration">6 min read</span>
+    <span class="article-duration">7 min read</span>
     
 
     <h1 class="article-title">Positive correlation between severity of fire incident, estimated loss and number of responding firefighters</h1>
@@ -102,13 +102,44 @@
 </div>
 <div id="are-they-correlated" class="section level1">
 <h1>Are they Correlated?</h1>
-<pre><code>## [1] 0.4311056</code></pre>
-<pre><code>## [1] 0.3120458</code></pre>
+<p>To assess correlation, the use of simple linear regression model and hypothesis testing on correlation coefficients was done for each set of graphs. The regression model shows a direct graphical implication of the relationship and provides the correlation coefficient. The hypothesis testing is just an extra safe to show that correlation is not zero, so we used a null hypothesis of correlation coefficient equal to zero and the alternative being non-zero.</p>
+<pre><code>## 
+##  Pearson&#39;s product-moment correlation
+## 
+## data:  Loss_NumUnit_low$Extent_Of_Fire and Loss_NumUnit_low$Number_of_responding_personnel
+## t = 50.372, df = 11115, p-value &lt; 2.2e-16
+## alternative hypothesis: true correlation is not equal to 0
+## 95 percent confidence interval:
+##  0.4158489 0.4461197
+## sample estimates:
+##       cor 
+## 0.4311056</code></pre>
+<pre><code>## 
+##  Pearson&#39;s product-moment correlation
+## 
+## data:  Loss_NumUnit_low$Extent_Of_Fire and Loss_NumUnit_low$Estimated_Dollar_Loss
+## t = 34.627, df = 11115, p-value &lt; 2.2e-16
+## alternative hypothesis: true correlation is not equal to 0
+## 95 percent confidence interval:
+##  0.2951687 0.3287283
+## sample estimates:
+##       cor 
+## 0.3120458</code></pre>
 <p><img src="/post/2020-09-20-Ps1-Yi_Su_files/figure-html/unnamed-chunk-4-1.png" width="50%" /><img src="/post/2020-09-20-Ps1-Yi_Su_files/figure-html/unnamed-chunk-4-2.png" width="50%" /></p>
-<p>First, &quot;Extent_of_fire&quot; appears to have a positive relationship with both &quot;Number_of_responding_personnel&quot; and &quot;Estimated_Dollar_Loss&quot;. The blue line in the graph is a simple linear regression line showing a positive correlation between the two variables for all three graphs, and the R value (correlation coefficient) indicates the strength of relationship. Notice that the correlation coefficitn of 0.431 and 0.312 are considered as fairly weak, this is due to the fact that, there are always more elements other than severity of the incident which influences number of responding firefighters and estimated loss. For example, the number of firefighters in a certain responding area is limited in the given time, and maybe the incident happened in an area or building with less valuable item in dollars.</p>
-<pre><code>## [1] 0.5493347</code></pre>
+<p>First, &quot;Extent_of_fire&quot; appears to have a positive relationship with both &quot;Number_of_responding_personnel&quot; and &quot;Estimated_Dollar_Loss&quot;. The blue line in the graph is a simple linear regression line showing a positive correlation between the two variables for all three graphs, and the p-values both being so small is just an indication that we can be sure there exist some correlation between the variables.The R value (correlation coefficient) indicates the strength of relationship. Notice that the correlation coefficitn of 0.431 and 0.312 are considered as fairly weak, this is due to the fact that, there are always more elements other than severity of the incident which influences number of responding firefighters and estimated loss. For example, the number of firefighters in a certain responding area is limited in the given time, and maybe the incident happened in an area or building with less valuable item in dollars.</p>
+<pre><code>## 
+##  Pearson&#39;s product-moment correlation
+## 
+## data:  Loss_NumUnit_low$Estimated_Dollar_Loss and Loss_NumUnit_low$Number_of_responding_personnel
+## t = 69.309, df = 11115, p-value &lt; 2.2e-16
+## alternative hypothesis: true correlation is not equal to 0
+## 95 percent confidence interval:
+##  0.5362211 0.5621831
+## sample estimates:
+##       cor 
+## 0.5493347</code></pre>
 <p><img src="/post/2020-09-20-Ps1-Yi_Su_files/figure-html/unnamed-chunk-5-1.png" width="80%" /></p>
-<p>Next, Looking at the impact of &quot;Number_of_Responding_Personnel&quot; on &quot;Estimated_Dollar_Loss&quot;. The figure above shows that most incidents are clustered at the left-bottom corner, which follows our observation on the individual distribution of there two. A R value of 0. 549 appears that the correlation between number of firefighters involved and estimated dollar loss is stronger than the previous two. However, this does not mean there exist a causality of &quot;more firefighters result in more loss&quot; or the opposite, the more important rule is the severity of incident. &quot;Extent_of_Fire&quot; acts like a gear between them, linking higher estimated loss with more firefighter involved in average.</p>
+<p>Next, Looking at the impact of &quot;Number_of_Responding_Personnel&quot; on &quot;Estimated_Dollar_Loss&quot;. The figure above shows that most incidents are clustered at the left-bottom corner, which follows our observation on the individual distribution of there two. Again, the small p-value shows the existence of some kind of correlation. A R value of 0. 549 appears that the correlation between number of firefighters involved and estimated dollar loss is stronger than the previous two. However, this does not mean there exist a causality of &quot;more firefighters result in more loss&quot; or the opposite, the more important rule is the severity of incident. &quot;Extent_of_Fire&quot; acts like a gear between them, linking higher estimated loss with more firefighter involved in average.</p>
 </div>
 <div id="constraints-of-the-data" class="section level1">
 <h1>Constraints of the data</h1>
