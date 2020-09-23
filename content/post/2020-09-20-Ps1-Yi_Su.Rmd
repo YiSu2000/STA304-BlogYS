@@ -90,9 +90,10 @@ Loss_NumUnit_low%>%
   annotate("text", x = 4, y = 200,
   label = "paste(italic(R), \" = .431\")", parse = TRUE, size = 8)+
   annotate("text", x = 4, y = 300,
-  label = "paste(italic(P-value), \" < 2.2e-16\")", parse = TRUE,size = 8)+
+  label = "paste(hat(y), \"= 20.1 + 4.45x\")", parse = TRUE,size = 8)+
   theme(title = element_text(size = 15, face = "bold"),axis.title=element_text(size=12))
-cor.test(Loss_NumUnit_low$Extent_Of_Fire,Loss_NumUnit_low$Number_of_responding_personnel)
+corEvN <- cor(Loss_NumUnit_low$Extent_Of_Fire,Loss_NumUnit_low$Number_of_responding_personnel)
+lmEvN <- lm(Loss_NumUnit_low$Number_of_responding_personnel~Loss_NumUnit_low$Extent_Of_Fire)
 
 Loss_NumUnit_low%>%
   ggplot(aes(x=Extent_Of_Fire, y=Estimated_Dollar_Loss))+
@@ -102,13 +103,18 @@ Loss_NumUnit_low%>%
   annotate("text", x = 4, y = 1500000,
   label = "paste(italic(R), \" = .312\")", parse = TRUE,size = 8)+
   annotate("text", x = 4, y = 2500000,
-  label = "paste(italic(P-value), \" < 2.2e-16\")", parse = TRUE,size = 8)+
+  label = "paste(hat(y), \"= -19138.7 + 24352.9x\")", parse = TRUE,size = 8)+
   theme(title = element_text(size = 15, face = "bold"),axis.title=element_text(size=12))
-cor.test(Loss_NumUnit_low$Extent_Of_Fire,Loss_NumUnit_low$Estimated_Dollar_Loss)
+corEvL <- cor(Loss_NumUnit_low$Extent_Of_Fire,Loss_NumUnit_low$Estimated_Dollar_Loss)
+lmEvL <- lm(Loss_NumUnit_low$Estimated_Dollar_Loss~Loss_NumUnit_low$Extent_Of_Fire)
 
 ```
 
-First, "Extent_of_fire" appears to have a positive relationship with both "Number_of_responding_personnel" and "Estimated_Dollar_Loss". The blue line in the graph is a simple linear regression line showing a positive correlation between the two variables for all three graphs, and the p-values both being so small is just an indication that we can be sure there exist some correlation between the variables.The R value (correlation coefficient) indicates the strength of relationship. Notice that the correlation coefficitn of 0.431 and 0.312 are considered as fairly weak, this is due to the fact that, there are always more elements other than extent of the incident which influences number of responding firefighters and estimated loss. For example, the number of firefighters in a certain responding area is limited in the given time, and maybe the incident happened in an area or building with less valuable item in dollars.
+First, "Extent_of_fire" appears to have a positive relationship with both "Number_of_responding_personnel" and "Estimated_Dollar_Loss". The blue line in the graph is a simple linear regression line showing a positive correlation between the two variables for all three graphs. Specifically, the SLR model for impact of extent of fire on number of responding personnel is: $$\hat{y}= 20.1 + 4.45x $$, meaning the expected estimiate loss is 20.1 when extent of fire is 0, and expected number of responding personnel increases for 4.45 when extent of fire raises by level of 1. The SLR model for impact of extent of fire on estimated loss is: $$\hat{y}= -19138.7 + 24352.9x $$, and the interpretation of parameters are similar to the last model. Notably, the negative intercept is just an expected loss when extent is 0 and does not mean there's a "negative loss" when no fire around. 
+
+The R value (correlation coefficient) indicates the strength of relationship. Notice that the correlation coefficient of 0.431 and 0.312 are considered as fairly weak, this is due to the existence of high residual value on the top half of both graphs. Notice the source of this is the large difference in scale of the explanatory and response variables. Extent of fire only takes on 1 to 10, but number of responding personnel reaches almost 500 at maximum, and estimated loss reaches 5 million at maximum. This is also why the correlation coefficient in Fig. 2 is lower than Fig. 1.
+
+On the other hand, there are always more elements other than extent of the incident which influences number of responding firefighters and estimated loss. For example, the number of firefighters in a certain responding area is limited in the given time, and maybe the incident happened in an area or building with less valuable item in dollars.
 
 ```{r,echo = FALSE, message = FALSE,fig.show="hold",out.width="80%"}
 Loss_NumUnit_low%>%
@@ -119,13 +125,16 @@ Loss_NumUnit_low%>%
   annotate("text", x = 3000000, y = 400,
   label = "paste(italic(R), \" = .549\")", parse = TRUE,size = 8)+
   annotate("text", x = 3000000, y = 500,
-  label = "paste(italic(P-value), \" < 2.2e-16\")", parse = TRUE,size = 8)+
+  label = "paste(hat(y), \"= 27.43 + (7.26e-05)x\")", parse = TRUE,size = 8)+
   theme(title = element_text(size = 15, face = "bold"),axis.title=element_text(size=12))
-cor.test(Loss_NumUnit_low$Estimated_Dollar_Loss,Loss_NumUnit_low$Number_of_responding_personnel)
+corLvN <- cor(Loss_NumUnit_low$Estimated_Dollar_Loss,Loss_NumUnit_low$Number_of_responding_personnel)
+lmLvN <- lm(Loss_NumUnit_low$Number_of_responding_personnel~Loss_NumUnit_low$Estimated_Dollar_Loss)
 ```
 
 
-Next, Looking at the impact of "Number_of_Responding_Personnel" on "Estimated_Dollar_Loss". The figure above shows that most incidents are clustered at the left-bottom corner, which follows our observation on the individual distribution of there two. Again, the small p-value shows the existence of some kind of correlation. A R value of 0. 549 appears that the correlation between number of firefighters involved and estimated dollar loss is stronger than the previous two. However, this does not mean there exist a causality of "more firefighters result in more loss" or the opposite, the more important rule is the extent of the incident. "Extent_of_Fire" acts like a gear between them, linking higher estimated loss with more firefighter involved in average.
+Next, Looking at Fig. 6 for the impact of "Number_of_Responding_Personnel" on "Estimated_Dollar_Loss". The figure above shows that most incidents are clustered at the left-bottom corner, which follows our observation on the individual distribution of there two. The SLR model fitted in Fig.6 is: $$\hat{y}= 27.43 + (7.26*10^{-5})x $$. Again, the intercept of 27.43 is the expected number of responding personnel when there's no estimated loss, and expected number of responding personnel increases for 7.26e-05 whenever estimated loss increase for 1. The slope of 7.26e-05 is looking small on its own due to the difference in scale of the variables, estimated loss use millions on the axis while number of personnel use hundreds.
+
+A R value of 0. 549 appears that the correlation between number of firefighters involved and estimated dollar loss is stronger than the previous two. However, this does not mean there exist a causality of "more firefighters result in more loss" or the opposite, the more important rule is the extent of the incident. "Extent_of_Fire" acts like a gear between them, linking higher estimated loss with more firefighter involved on average.
   
 #Constraints of the data
 
