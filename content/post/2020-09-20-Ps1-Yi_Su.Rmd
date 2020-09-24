@@ -8,15 +8,23 @@ output:
     df_print: paged
 ---
 > # Abstract
-> This post analyzed the impact of extent of fire incidents on both economic loss and the number of firefighter responded. As well as correlation between loss and number of firefighters just for demonstration of the role of extent of fire between them
+> This post analyzed the impact of extent of fire incidents on both economic loss and the number of firefighter responded. As well as correlation between loss and number of firefighters just for demonstration of the role of extent of fire between them. The goal is to identify the degree of correlation and the implication behind.
 
 # Introduction
-  "Fire Incidents Data" is a dataset published by the TFS, Toronto Fire Services, containing 17536 observations of fire incidents defined by the Ontario Fire Marshal. The detailed assessments for each incidents are recorded, such as crew arrival time, estimated loss in dollars, existence and type of fire alarm, number of casualties and more. However, as to the policy of Canadian government, no privacy information or any detail that implies privacy was included.
-  
-  In this post, the distribution of estimated dollar loss caused by fire incidents, number of firefighters that responded to the incident, and the extent of fire were be examined. The main goal is to assess how the extent of fire includeneces on the other two variables, and explore any correlation between the three of them. However, the findings do not imply any causality so far, since all conlcusions are based on data only and the official method of how TFS respond to fire incidents is unknown.
-
-```{r,echo = FALSE,options(readr.num_columns = 0), message = FALSE}
+"Fire Incidents Data" is a dataset published by the TFS, Toronto Fire Services, containing 17536 observations of fire incidents defined by the Ontario Fire Marshal. The detailed assessments for each incident are recorded, such as crew arrival time, the extent of fire, estimated loss in dollars, existence and type of fire alarm, number of casualties, and a lot more variables with a detailed description. However, as to the policy of the Canadian government, no private information or any detail that implies privacy were included. The csv. filed dataset was directly downloaded from Open Data Toronto without the help of R packages, the specific source website is documented in the references. 
+```{r, echo = FALSE, message = FALSE, options(readr.num_columns = 0)}
 library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(knitr)
+library(rmarkdown)
+library(blogdown)
+```
+
+  
+In this post, the distribution of estimated dollar loss caused by fire incidents, the number of firefighters that responded to the incident, and the extent of fire were examined. The main goal is to assess how the extent of fire influences on the other two variables, and explore any correlation between the three of them. The results were positive overall, the extent of fire is indeed one important determiner of the other two variables. However, the findings do not and should not imply any causality so far, since all conclusions are based on data only and the official method of how TFS respond to fire incidents is unknown. The hope is that these findings could improve the efficiency of deploying firefighters and help to confine the economic loss of citizens.
+
+```{r,echo = FALSE, message = FALSE}
 RAW <- read_csv("Fire Incidents Data.csv")%>%select(Estimated_Dollar_Loss, Number_of_responding_personnel, Extent_Of_Fire )
 #to build a data fram with only the varaiables we are interested in
 Loss_NumUnit <- na.omit(RAW)
@@ -31,13 +39,13 @@ Loss_NumUnit_low <- Loss_NumUnit%>%
 ```
 
 #Working on the Dataset
-| To work with the Fire_Incidents dataset, we need to pull out the data we are interested in and make it tidy for graphing and regression. This could be done by simply selecting the variables we are interested in and removing all the empty observations (the NAs) of those variables. The three discrete variable we are intereted in are named "Estimated_Dollar_Loss", "Number_of_responding_personnel", and "Extent_Of_Fire" in the dataset, and this new dataset of three variables act as the observational data. In order to do this, the R package "tidyverse" was used.
+To work with the Fire_Incidents dataset, we need to pull out the data we are interested in and make it tidy for graphing and regression. This could be done by simply selecting the variables we are interested in and removing all the empty observations (the NAs) of those variables. The three discrete variables we are interested in were named "Estimated_Dollar_Loss", "Number_of_responding_personnel", and "Extent_Of_Fire" in the dataset, and this new dataset of three variables act as the observational data. To do this, the R package "tidyverse" was used.
 
 
-| During the tidying, 6322 incidents were removed for having no value recorded, and those NAs are mostly from "Extent_of_Fire" variable. Another interesting feature of this dataset is that the "Extent_of_Fire" variable included a description of the level of extent in each incident. Extent of fire is a bit different from the others as it is ranked from 1 to 10, 1 being the fire is confined to the object of origin, 10 being the fire spreaded beyond the building of origin. This is useful when interpreting the data, but not so tidy and convenient when graphing it. Therefore, we deleted all the description by taking advantage of the fact that all entry begin with the numeric level of extent of fire. 
+During the tidying, 6322 incidents were removed for having no value recorded, and those NAs are mostly from "Extent_of_Fire" variable. Another interesting feature of this dataset is that the "Extent_of_Fire" variable included a description of the level of extent in each incident. Extent of fire is a bit different from the others as it is ranked from 1 to 10, 1 being the fire is confined to the object of origin, 10 being the fire spreaded beyond the building of origin. This is useful when interpreting the data, but not so tidy and convenient when graphing it. Therefore, we deleted all the description by taking advantage of the fact that all entry begin with the numeric level of extent of fire. 
 
 
-| To make the graph more readable, a couple outlier incidents that resulted in more than 6 million dollar estimated loss and required more than 1000 were removed. This should make the graphs to a significantly smaller scale, and therefore more readable. In addition, there exist a special value of 99 in "extent_of_fire". The 99 stands for extent undetermined, which only appeared 91 among the entire dataset. This special case is also considered as a NA value and therefore filtered out of our data.
+In order to make the graph more readable, a couple outlier incidents that resulted in more than 6 million dollar estimated loss and required more than 1000 were removed. This should make the graphs to a significantly smaller scale, and therefore more readable. In addition, there exist a special value of 99 in "extent_of_fire". The 99 stands for extent undetermined, which only appeared 91 among the entire dataset. This special case is also considered as a NA value and therefore filtered out of our data.
 
 #Individual Distribution
 
@@ -63,7 +71,7 @@ Loss_NumUnit_low%>%
 #most losses are contained within $500,000
 ```
   
-In fig.2, the majority of estimated loss in dollar are confined under $300,000. This is very intuitive, not all fire incidents results in a significant loss, only if the whole building was burned down or the area spread beyond the district.
+In fig.2, the majority of estimated loss in dollar are confined under $300,000. This should be very intuitive, not all fire incidents results in a significant loss, only if the whole building was burned down or the area spread beyond the district.
 
 ```{r,echo= FALSE,message = FALSE,fig.show="hold", out.width="80%"}
 Loss_NumUnit_low%>%
@@ -144,7 +152,7 @@ The Fire Incidents dataset by TFS is a very detailed dataset but constraints sti
 
 In conclusion, the extent of fire appears to be indeed one of the factor when assessing number of responding personnel and estimating loss in dollars. However, according to the strength of correlation coefficient, extent of fire may not be the main cause for those responding variables to be high. For example, longer fire-extinguish time may give TFS incentive to add the number of responding personnels, and more dangerous location of the incident like gas station may requrie more personnels and equipments to handle. There are more variables in the original dataset that could be potential factors, which could be worth the exploration of future works.
 
-#Citations
+#Citations and References
 
 * Toronto Fire Services (2020), Fire Incidents, Open Data Toronto. URL https://open.toronto.ca/dataset/fire-incidents/
 
